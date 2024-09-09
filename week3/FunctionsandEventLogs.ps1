@@ -6,7 +6,7 @@
 $loginouts = Get-EventLog -LogName System -Source Microsoft-Windows-WinLogon -After (Get-Date).AddDays(-14)
 
 $loginouts = @()
-for($i=0; $i -14; $loginouts.Count; $i++) 
+for($i=0; $i -lt $loginouts.Count; $i++) 
 {
 
     # Creating event property value
