@@ -1,8 +1,10 @@
-﻿# get event login and logoff records
+﻿clear
+# get event login and logoff records
 #Get-EventLog -LogName System -Source Microsoft-Windows-WinLogon
 
 # Get login and logoff events and save as a variable
 # Get the last 14 days
+
 
 function getTheLogs($daysago){
 $loginouts = Get-EventLog System -Source Microsoft-Windows-WinLogon -After (Get-Date).AddDays("-"+"$daysago")
