@@ -3,9 +3,11 @@
 
 # Get login and logoff events and save as a variable
 # Get the last 14 days
-$loginouts = Get-EventLog System -Source Microsoft-Windows-WinLogon -After (Get-Date).AddDays("-"+"14")
 
-$loginouts = @()
+function getTheLogs($daysago){
+$loginouts = Get-EventLog System -Source Microsoft-Windows-WinLogon -After (Get-Date).AddDays("-"+"$daysago")
+
+$loginoutsTable = @()
 
 for($i=0; $i -lt $loginouts.Count; $i++) 
 {
@@ -15,14 +17,18 @@ for($i=0; $i -lt $loginouts.Count; $i++)
     if($loginouts[$i].InstanceID -eq 7002) {$event="logoff"}
 
     # Creating user property value
-    $user = $loginouts[$i].ReplacementStrings[1]
+    $sid = $loginouts[$i].ReplacementStrings[1]
+    $user = (New-Object System.Security.Principal.SecurityIdentifier($sid)).Translate([System.Security.Principal.NTAccount]).Value
 
     # Adding each new line (in form of a custom object) to our empty array
-    $loginoutsTable += [loginouts]@{"Time" = $loginouts[$i].TimeGenerated(); `
+    $loginoutsTable += [pscustomobject]@{"Time" = $loginouts[$i].TimeGenerated; `
                                     "Id" = $loginouts[$i].InstanceID; `
                                     "Event" = $event; `
                                     "User" = $user;
                                     }
 } # End of for loop
 
-$loginoutsTable
+return $loginoutsTable
+}
+getTheLogs(365)
+
