@@ -6,13 +6,9 @@
 $loginouts = Get-EventLog System -Source Microsoft-Windows-WinLogon -After (Get-Date).AddDays("-"+"14")
 
 $loginouts = @()
-<<<<<<< HEAD
-for($i=0; $i -lt $loginouts.Count; $i++){
-=======
+
 for($i=0; $i -lt $loginouts.Count; $i++) 
 {
->>>>>>> a63e3f56c9c8709de0e57929c4553eacb7425da5
-
     # Creating event property value
     $event = ""
     if($loginouts[$i].InstanceID -eq 7001) {$event="logon"}
