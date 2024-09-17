@@ -38,23 +38,34 @@ $counts = $ipsoftens | Group ip
 $counts | Select-Object Count, Name
 #>
 
-function getApacheLogs($page,$statuscode,$browser){
- $snag = Get-Content C:\xampp\apache\logs\access.log
- $matchall = $snag | Select-String "$page" | Select-String $statuscode | Select-String $browser
+function Retrieve-ApacheLogEntries {
+    param (
+        [string]$Page,        # The requested page or referrer
+        [string]$HttpCode,    # The HTTP status code
+        [string]$Browser      # The browser name or user agent
+    )
+    
+    # Fetch the Apache log data
+    $logData = Get-Content C:\xampp\apache\logs\access.log
+    
+    # Filter the log entries based on the page, status code, and browser
+    $filteredEntries = $logData | Select-String "$Page" | Select-String $HttpCode | Select-String $Browser
 
- $regex = [regex] "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
- $ipsUnorganized = $regex.Matches($matchall)
+    # Regular expression to capture IP addresses (IPv4)
+    $ipPattern = [regex] "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+    $ipAddresses = $ipPattern.Matches($filteredEntries)
 
- $accessTable = @()
- for($i=0; $i -lt $matchall.count; $i++){
-  $accessTable += [pscustomobject]@{ "IP" = $ipsUnorganized[$i].value; `
-                                     "Page" = $page; `
-                                     "Status Code" = $statuscode; `
-                                     "Browser" = $browser; `
-                                     }
- }
+    # Create a table to store the results
+    $logTable = @()
+    for ($i = 0; $i -lt $filteredEntries.Count; $i++) {
+        $logTable += [pscustomobject]@{ 
+            "IPAddress"   = $ipAddresses[$i].Value
+            "VisitedPage" = $Page
+            "ResponseCode" = $HttpCode
+            "UserAgent"   = $Browser
+        }
+    }
 
- return $accessTable
+    # Return the result table with filtered IPs
+    return $logTable
 }
-
-getApacheLogs "index.html" " 200 " "Chrome"
