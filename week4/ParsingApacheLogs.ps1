@@ -6,7 +6,7 @@ function ApacheLogs1{
         # split a string into words
         $words = $logsNotformatted[$i].Split(" ")
 
-        $tableRecords += [PSCustomObject]@{
+    $tableRecords += [pscustomobject]@{
             "IP"        = $words[0]
             "Time"      = ($words[3] + " " + $words[4]).Trim('[', ']')
             "Method"    = $words[5].Trim('"')
