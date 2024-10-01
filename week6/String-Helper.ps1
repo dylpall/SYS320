@@ -27,3 +27,21 @@ for($j=0; $j -lt $splitted.Count; $j++){
 
 return $allines
 }
+
+function checkPassword($password){
+    if($password.length -lt 6){
+    return $false
+    }
+    elseif($password -inotlike "*[0-9]*"){
+    return $false
+    }
+    elseif($password -inotlike "*[a-zA-Z]*"){
+    return $false
+    }
+    elseif($password -inotlike "*[^A-Za-z0-9]*"){
+    return $false
+    }
+    else{
+    return $true
+    }
+}

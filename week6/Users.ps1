@@ -10,7 +10,7 @@ function getEnabledUsers(){
 
 }
 
-function CheckUser($name){
+function checkUser($name){
 $userToCheck = Get-LocalUser | Where-Object {$_.name -ilike $name}
   if ($userToCheck.count -gt 0) 
   {
@@ -58,7 +58,6 @@ function createAUser($name, $password){
    Disable-LocalUser $newUser
 
 }
-
 
 
 function removeAUser($name){
