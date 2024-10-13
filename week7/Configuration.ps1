@@ -1,24 +1,34 @@
 ﻿clear
 
 function readConfiguration {
-    $getconfig = Get-Content -Path "C:\Users\champuser\SYS320\week7\configuration.txt"
-    $data = @()
-    for($i = 0; $i -lt 1; $i++){
-        $data += [pscustomobject]@{
-                                "Days" = $getconfig[0];
-                                "ExectuionTime" = $getconfig[1];
+    $data = (Get-Content -Path C:\Users\champuser\SYS320\week7\configuration.txt)
+    $Days = $data[0]
+    $Time = $data[1]
+    return [PSCustomObject]@{
+        Days = $Days
+        ExecutionTime = $Time
+      }
+}
+
+
+function changeConfiguration {
+    
+        $Days = Read-Host "Enter the number of days for which the logs will be obtained"
+        if ($Days -match '^\d+$') {
+        } else {
+            Write-Host "Invalid input."
+            continue
         }
+
+        $Time = Read-Host "Enter the daily execution time of the script (e.g., 3:42 PM)"
+        if ($Time -match '[1]{0,1}\d:[0-5]\d\s(AM|PM)') {
+        } else {
+            Write-Host "Invalid input."
+            continue
+        }
+    "$Days`n$Time" | Set-Content C:\Users\champuser\SYS320\week7\configuration.txt   
     }
-    return $data
-}
-
-
-function changeFunction {
-    $newDays = Read-Host -Prompt "Enter the number of days for which the logs will be obtained"
-    $newTime = Read-Host -Prompt "Enter the daily execution time of the script"
-    $newData = $newDays, $newTime
-    Set-Content -Path "C:\Users\champuser\SYS320\week7\configuration.txt" -Value $newData
-}
+    
 
 function configurationMenu {
     $Prompt = "Please choose your operation:`n"
@@ -37,8 +47,11 @@ while($operation) {
         $operation = $false
     }
     elseif($choice -eq 1) {
-        readConfiguration
+        readConfiguration | Out-String
         
+    }
+    elseif($choice -eq 2) {
+        changeConfiguration | Out-String
     }
   }
 }
