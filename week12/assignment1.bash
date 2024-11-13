@@ -41,7 +41,7 @@ echo -n "Please Input a Course Location: "
 read Loc
 
 echo ""
-echo "Courses of $Loc :"
+echo "Courses in $Loc:"
 cat "$courseFile" | grep "$Loc" | cut -d';' -f1-2,5-7 | \
 sed 's/;/ | /g'
 echo ""
@@ -54,8 +54,16 @@ echo ""
 # Example input: SEC
 # Example output: See the screenshots in canvas
 function courseAvailability() {
+echo -n "Please Input a Course: "
+read course
 
-
+echo ""
+echo "Available courses in $course:"
+cat "$courseFile" | grep "$course" | \
+sed 's/;/ | /g' | \
+awk -F'|' '$4 > 0'
+echo ""
+}
 while : 
 do
 	echo ""
@@ -63,6 +71,7 @@ do
 	echo "[1] Display courses of an instructor"
 	echo "[2] Display course count of instructors"
 	echo "[3] Display courses in location"
+	echo "[4] Display available seats in a course"
 	echo "[5] Exit"
 
 	read userInput
@@ -80,6 +89,10 @@ do
 
 	elif [[ "$userInput" == "3" ]]; then
 		courseLocation
+
+	elif [[ "$userInput" == "4" ]]; then
+		courseAvailability
+
 	# TODO - 3 Display a message, if an invalid input is given
 	else {
 	echo "Invalid Input. Please enter a number 1-5."
