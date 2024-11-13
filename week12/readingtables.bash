@@ -1,40 +1,13 @@
 #! /bin/bash
 
-url="http://10.0.17.6/Assignment.html"
 
-html=$(curl -s "$url")
+curl -s "http://10.0.17.6/Assignment.html" -o page.html
 
-temp_rows=$(echo "$html" | \
-sed -n '/The Tempeerature Read:/,/The Pressure Read:/p' | \
-grep -Eo '<td>[^<]+</td>' | \
-sed 's/<[^>]*>//g' | \
-paste - -)
+xmllint --html --format page.html -o formatted_page.html 2>/dev/null
 
-pressure_rows=$(echo "$html" | \
-sed -n '/The Pressure Read:/,$p' | \
-grep -Eo '<td>[^<]+</td>' | \
-sed 's/<[^>]*>//g' | \
-paste - -)
+table1=$(awk '/<table/,/<\/table>/' formatted_page.html | head -n -1 | tail -n +2)
+table2=$(awk '/<table/,/<\/table>/ {if (++count == 2) {print}}' formatted_page.html)
 
-echo -e "Temperature\tPressure\tDate-Time"
+combined_table="<table>\n${table1}\n${table2}\n</table>"
 
-temp_arr=($temp_rows)
-pressure_arr=($pressure_rows)
-
-for ((i = 0; i< ${#temp_arr[@]}; i+=2));
-do
-	temp="@{temp_arr[i]}"
-	temp_date="${temp_arr[i+1]}"
-
-	for ((j = 0; j< ${#pressure_arr[@]}; j+=2));
-	do
-		pressure="${pressure_arr[j]}"
-		pressure_date="${pressure_arr[j+1]}"
-
-		if [ "$temp_date" == "pressure_date" ];
-		then
-			echo -e "$temp\t\t$pressure\t\t$temp_date"
-			break
-		fi
-	done
-done
+echo -e "$combined_table"
