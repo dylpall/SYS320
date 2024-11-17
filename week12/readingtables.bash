@@ -18,6 +18,6 @@ awk -F "[><]" '{print $3}'
 
 ) )
 
-for ((i=0; i<"${#temps[@]}"; i+=2)) {
-echo "${pres[$i]}  ${temp[$i]}  ${temps[$i+1]}"
+for ((i=0; i<"${#temp[@]}"; i+=2)) {
+echo "${pres[$i]}  ${temp[$i]}  ${temp[$i+1]}"
 }
