@@ -1,7 +1,0 @@
-To: dylan.pallatroni@mymail.champlain.edu
-Subject: Logins
-Nov 18 lightdm
-Nov 18 champuser
-Nov 18 11:23:25 xubuntu lightdm: pam_succeed_if(lightdm:auth): requirement "user ingroup nopasswdlogin" not met by user "champuser"
-Nov 18 11:23:30 xubuntu lightdm: pam_succeed_if(lightdm:auth): requirement "user ingroup nopasswdlogin" not met by user "champuser"
-Nov 18 11:23:38 xubuntu lightdm: pam_succeed_if(lightdm:auth): requirement "user ingroup nopasswdlogin" not met by user "champuser"
